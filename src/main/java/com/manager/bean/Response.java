@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.manager.handler.TokenHandler;
+import com.manager.util.TokenUtil;
 
 public class Response {
 	
@@ -40,7 +40,7 @@ public class Response {
 	}
 
 	public Response appendToken(String token) {
-		this.token = new TokenHandler().encodeToken(token);
+		this.token = TokenUtil.encodeToken(token);
 		return this;
 	}
 	

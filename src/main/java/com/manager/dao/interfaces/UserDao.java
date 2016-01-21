@@ -2,8 +2,6 @@ package com.manager.dao.interfaces;
 
 import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-
 import com.manager.bean.User;
 
 public interface UserDao {

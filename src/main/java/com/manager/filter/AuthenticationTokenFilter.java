@@ -1,7 +1,6 @@
 package com.manager.filter;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 
 import com.manager.constant.ParameterConstant;
+import com.manager.util.TokenUtil;
 
 @Component
 public class AuthenticationTokenFilter implements Filter {
@@ -37,27 +37,25 @@ public class AuthenticationTokenFilter implements Filter {
 	    if(ignoreUrl.equals(uri)) {
 	    	chain.doFilter(request, response);
 	    }
-	    
-		Map<String,String[]> params = request.getParameterMap();
-		if (!params.isEmpty() && params.containsKey(ParameterConstant.TOKEN)) {
-			String clientToken = params.get(ParameterConstant.TOKEN)[0];
+		String clientToken = httpRequest.getHeader(ParameterConstant.TOKEN);
+		if (clientToken != null) {
             if (clientToken != null && session.getAttribute(ParameterConstant.TOKEN) != null) {
             	String tokenInSession = (String) session.getAttribute(ParameterConstant.TOKEN);
+            	clientToken = TokenUtil.decodeToken(clientToken);
             	if(tokenInSession.equals(clientToken)) {
             		chain.doFilter(request, response);
             	}
             }
-		} else {
-			HttpServletResponse httpResponse = (HttpServletResponse) response;
-			httpResponse.sendRedirect("/login.html");
-		}
+		} 
+		
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		httpResponse.sendRedirect("/login.html");
 		
 	}
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-
+		// do nothing
 	}
 
 }

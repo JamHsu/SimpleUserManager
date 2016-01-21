@@ -25,8 +25,8 @@ public class UserCrudService extends BaseService implements CrudService<User> {
 	public int create(User user) throws UserExistException {
 		logger.debug("Create user:" + user);
 		
-		if(!isUserNameExist(user)) {
-			logger.info("User already exist:" + user.getUserName());
+		if(isUserNameExist(user)) {
+			logger.info("User already exist:" + user.getName());
 			throw new UserExistException();
 		}
 		return userDao.createUser(user);
@@ -58,7 +58,7 @@ public class UserCrudService extends BaseService implements CrudService<User> {
 	
 	private Boolean isUserNameExist(User user) {
 		try {
-			return userDao.getUser(user.getUserName()) != null;
+			return userDao.getUser(user.getName()) != null;
 		} catch (EmptyResultDataAccessException e) {
 			return Boolean.FALSE;
 		}

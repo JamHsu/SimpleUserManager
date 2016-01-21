@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.manager.Application;
@@ -25,8 +26,8 @@ public class UserDaoTest {
 	@Before
 	public void setUp() throws Exception {
 		testUser = new User();
-		testUser.setUserName("testUser");
-		testUser.setUserPassword("testUserPassword");
+		testUser.setName("testUser");
+		testUser.setPassword("testUserPassword");
 	}
 
 	@After
@@ -41,26 +42,29 @@ public class UserDaoTest {
 		
 		// test get user and verify create is success
 		User user = dao.getUser(id);
-		assertEquals(id, user.getUserId().intValue());
-		assertEquals("testUser", user.getUserName());
-		assertEquals("testUserPassword", user.getUserPassword());
+		assertEquals(id, user.getId().intValue());
+		assertEquals("testUser", user.getName());
+		assertEquals("testUserPassword", user.getPassword());
 		
 		// update user test
 		User updateUser = new User();
-		updateUser.setUserId(user.getUserId());
-		updateUser.setUserName("updateUser");
-		updateUser.setUserPassword("updatePassword");
+		updateUser.setId(user.getId());
+		updateUser.setName("updateUser");
+		updateUser.setPassword("updatePassword");
 		dao.updateUser(updateUser);
 		
 		user = dao.getUser(id);
-		assertEquals("updateUser", user.getUserName());
-		assertEquals("updatePassword", user.getUserPassword());
+		assertEquals("updateUser", user.getName());
+		assertEquals("updatePassword", user.getPassword());
 		
 		// delete user test
-		dao.deleteUser(user.getUserId());
-		user = dao.getUser(id);
-		
-		assertNull(user);
+		dao.deleteUser(user.getId());
+		try {
+			dao.getUser(id);
+		} catch (EmptyResultDataAccessException e) {
+			assertEquals("Incorrect result size: expected 1, actual 0",  e.getMessage());
+		}
+	
 	}
 
 }

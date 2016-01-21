@@ -1,22 +1,26 @@
-package com.manager.handler;
+package com.manager.util;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 
-public class TokenHandler { 
+public class TokenUtil { 
 	
 	private static final String KEY = "#)$(@*FHWK&:)";
 	
-	public Boolean verify(String sessionToken, String clientToken) {
+	public static Boolean verify(String sessionToken, String clientToken) {
 		String reverseClientToken = new String(Base64.decodeBase64(clientToken));
 		return sessionToken.equals(reverseClientToken);
 	}
 	
-	public String encodeToken(String token) {
+	public static String encodeToken(String token) {
 		return Base64.encodeBase64String(token.getBytes());
 	}
 	
-	public String createToken() {
+	public static String decodeToken(String encodeToken) {
+		return new String(Base64.decodeBase64(encodeToken)); 
+	}
+	
+	public static String createToken() {
 		String randomString = RandomStringUtils.randomAlphanumeric(32);
 		String token = randomString + KEY;
 		return token;

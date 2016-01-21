@@ -3,47 +3,49 @@ package com.manager.bean;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User implements Serializable{
 	
 	private static final long serialVersionUID = 1777497490800529561L;
-	private Integer userId;
-	private String userName;
+	private Integer id;
+	private String name;
 	private String password;
 	
 	public User(){}
 	
-	public Integer getUserId() {
-		return userId;
+	public Integer getId() {
+		return id;
 	}
 	
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setId(Integer userId) {
+		this.id = userId;
 	}
 	
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
 	
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setName(String userName) {
+		this.name = userName;
 	}
 	
 	@JsonIgnore
-	public String getUserPassword() {
+	public String getPassword() {
 		return password;
 	}
 	
-	public void setUserPassword(String password) {
+	@JsonProperty
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	
 	@Override
 	public String toString() {
 		return "User ["
-				+ "userId=" + userId
+				+ "Id=" + id
 				+ ", password=" + password
-				+ ", userName=" + userName
+				+ ", Name=" + name
 				+ "]";
 	}
 	

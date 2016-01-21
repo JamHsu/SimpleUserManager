@@ -17,9 +17,10 @@ public class LoginService extends BaseService {
 	private UserDao userDao;
 	
 	public Boolean login(String userName, String userPassword) {
-		logger.debug("Start user login:" + userName);
+		logger.debug("user login:" + userName);
 		User user = userDao.getUser(userName);
-		Boolean result = user.equals(userName) && user.getUserPassword().equals(userPassword);
+		Boolean result = user.getName().equals(userName) 
+				&& user.getPassword().equals(userPassword);
 		logger.debug("User login result:" + result);
 		return result;
 	}

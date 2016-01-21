@@ -26,11 +26,12 @@ public class UserManagerController {
 	@RequestMapping(value ="", method = RequestMethod.POST)
 	public Object createUser(@RequestBody User user) {
 		try {
-			return service.create(user);
+			Integer id = service.create(user);
+			return service.getData(id);
 		} catch (UserExistException e) {
 			return new Response("User is exist."); 
 		} catch (Exception e) {
-			String msg = "Create user failed:" + e.getMessage();
+			String msg = "Create user occur exception:" + e.getMessage();
 			logger.error(msg, e);
 			return new Response(msg);
 		}

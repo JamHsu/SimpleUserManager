@@ -30,8 +30,8 @@ public class UserDaoImp extends BaseDao implements UserDao {
 	        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 	            PreparedStatement pst =
 	                con.prepareStatement(sql, new String[]{"id"});
-	            pst.setString(1, user.getUserName());
-	            pst.setString(2, user.getUserPassword());
+	            pst.setString(1, user.getName());
+	            pst.setString(2, user.getPassword());
 	            return pst;
 	        }
 	    },
@@ -90,7 +90,7 @@ public class UserDaoImp extends BaseDao implements UserDao {
 				+ " SET name=?, password=?"
 				+ " WHERE id = ?";
 		getJdbcTemplate().update(sql, new Object[]{
-				user.getUserName(), user.getUserPassword(), user.getUserId()});
+				user.getName(), user.getPassword(), user.getId()});
 	}
 
 	@Override
@@ -108,9 +108,9 @@ public class UserDaoImp extends BaseDao implements UserDao {
 			@Override
 			public User mapRow(ResultSet dbResult, int rowNum) throws SQLException {
 				User user = new User();
-				user.setUserId(dbResult.getInt("id"));
-				user.setUserName(dbResult.getString("name"));
-				user.setUserPassword(dbResult.getString("password"));
+				user.setId(dbResult.getInt("id"));
+				user.setName(dbResult.getString("name"));
+				user.setPassword(dbResult.getString("password"));
 				return user;
 			}
 			
