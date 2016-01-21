@@ -1,7 +1,5 @@
 package com.manager.controller;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -37,7 +35,7 @@ public class LoginController {
 				String userPassword = user.getPassword();
 				
 				if(service.login(userName, userPassword)) {
-					String token = new TokenUtil().createToken();
+					String token = TokenUtil.createToken();
 					HttpSession session = request.getSession();
 					session.setAttribute(ParameterConstant.TOKEN, token);
 					return new Response("Login success.").appendToken(token);

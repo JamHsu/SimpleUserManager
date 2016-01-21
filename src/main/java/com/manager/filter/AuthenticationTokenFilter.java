@@ -37,12 +37,11 @@ public class AuthenticationTokenFilter implements Filter {
 	    if(ignoreUrl.equals(uri)) {
 	    	chain.doFilter(request, response);
 	    }
-		String clientToken = httpRequest.getHeader(ParameterConstant.TOKEN);
-		if (clientToken != null) {
-            if (clientToken != null && session.getAttribute(ParameterConstant.TOKEN) != null) {
+		String tokenInClient = httpRequest.getHeader(ParameterConstant.TOKEN);
+		if (tokenInClient != null) {
+            if (tokenInClient != null && session.getAttribute(ParameterConstant.TOKEN) != null) {
             	String tokenInSession = (String) session.getAttribute(ParameterConstant.TOKEN);
-            	clientToken = TokenUtil.decodeToken(clientToken);
-            	if(tokenInSession.equals(clientToken)) {
+            	if(TokenUtil.verify(tokenInSession, tokenInClient)) {
             		chain.doFilter(request, response);
             	}
             }
