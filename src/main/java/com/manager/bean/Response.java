@@ -9,15 +9,33 @@ import com.manager.util.TokenUtil;
 
 public class Response {
 	
-	private String status;
-	private String token;
+	private Object data = null;
+	private String status = null;
+	private String token = null;
 	private Timestamp timeStamp;
+	
+	protected Response(){}
+	
+	public Response(Object data) {
+		this.data = data;
+		this.timeStamp = new Timestamp(new Date().getTime());
+	}
 	
 	public Response(String status) {
 		this.status = status;
 		this.timeStamp = new Timestamp(new Date().getTime());
 	}
+	
+	@JsonInclude(Include.NON_NULL)
+	public Object getData() {
+		return data;
+	}
 
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	@JsonInclude(Include.NON_NULL)
 	public String getStatus() {
 		return status;
 	}

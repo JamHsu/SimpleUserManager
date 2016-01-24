@@ -26,7 +26,7 @@ public class LoginController {
 	private LoginService service;
 	
 	@RequestMapping(value ="/login", method = RequestMethod.POST)
-	public Object login(HttpServletRequest request,
+	public Response login(HttpServletRequest request,
 			@RequestBody User user) {
 		try {
 			if(user.getName() != null
@@ -54,7 +54,7 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value ="/logout", method = RequestMethod.POST)
-	public Object logout(HttpServletRequest request) {
+	public Response logout(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if(session != null) {
 			session.setAttribute(ParameterConstant.TOKEN, null);

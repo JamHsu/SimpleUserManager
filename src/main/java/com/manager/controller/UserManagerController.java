@@ -1,5 +1,7 @@
 package com.manager.controller;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,10 +27,10 @@ public class UserManagerController {
 	private UserCrudService service;
 	
 	@RequestMapping(value ="", method = RequestMethod.POST)
-	public Object createUser(@RequestBody User user) {
+	public Response createUser(@RequestBody User user) {
 		try {
 			Integer id = service.create(user);
-			return service.getData(id);
+			return new Response(service.getData(id));
 		} catch (UserExistException e) {
 			return new Response(ResponseMsg.USER_IS_EXIST); 
 		} catch (Exception e) {
@@ -39,9 +41,11 @@ public class UserManagerController {
 	}
 	
 	@RequestMapping(value ="", method = RequestMethod.GET)
-	public Object listUsers() {
+	public Response listUsers() {
 		try {
-			return service.listData();
+			List<User> userList = service.listData();
+			logger.debug("get user count:" + userList.size());
+			return new Response(userList);
 		} catch (Exception e) {
 			String msg = "list users failed:" + e.getMessage();
 			logger.error(msg, e);
@@ -50,9 +54,11 @@ public class UserManagerController {
 	}
 	
 	@RequestMapping(value ="/{id}", method = RequestMethod.GET)
-	public Object getUser(@PathVariable("id") Integer userId) {
+	public Response getUser(@PathVariable("id") Integer userId) {
 		try {
-			return service.getData(userId);
+			User user = service.getData(userId);
+			logger.debug("get user:" + user);
+			return new Response(user);
 		} catch (EmptyResultDataAccessException e) {
 			return new Response(ResponseMsg.USER_NOT_FOUND);
 		} catch (Exception e) {
@@ -63,7 +69,7 @@ public class UserManagerController {
 	}
 	
 	@RequestMapping(value="", method = RequestMethod.PUT)
-	public Object updateUser(@RequestBody User user) {
+	public Response updateUser(@RequestBody User user) {
 		try {
 			service.update(user);
 			return new Response(ResponseMsg.UPDATE_USER_SUCCESS);
@@ -75,7 +81,7 @@ public class UserManagerController {
 	}
 	
 	@RequestMapping(value ="/{id}", method = RequestMethod.DELETE)
-	public Object deleteUser(@PathVariable("id") Integer userId) {
+	public Response deleteUser(@PathVariable("id") Integer userId) {
 		try {
 			service.delete(userId);
 			return new Response(ResponseMsg.DELETE_USER_SUCCESS);
