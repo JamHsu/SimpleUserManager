@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.manager.bean.Response;
 import com.manager.bean.User;
+import com.manager.constant.ResponseMsg;
 import com.manager.exception.UserExistException;
 import com.manager.service.UserCrudService;
 
@@ -29,7 +30,7 @@ public class UserManagerController {
 			Integer id = service.create(user);
 			return service.getData(id);
 		} catch (UserExistException e) {
-			return new Response("User is exist."); 
+			return new Response(ResponseMsg.USER_IS_EXIST); 
 		} catch (Exception e) {
 			String msg = "Create user occur exception:" + e.getMessage();
 			logger.error(msg, e);
@@ -53,7 +54,7 @@ public class UserManagerController {
 		try {
 			return service.getData(userId);
 		} catch (EmptyResultDataAccessException e) {
-			return new Response("User not found.");
+			return new Response(ResponseMsg.USER_NOT_FOUND);
 		} catch (Exception e) {
 			String msg = "get user " + userId + " failed:" + e.getMessage();
 			logger.error(msg, e);
@@ -65,7 +66,7 @@ public class UserManagerController {
 	public Object updateUser(@RequestBody User user) {
 		try {
 			service.update(user);
-			return new Response("Update user success");
+			return new Response(ResponseMsg.UPDATE_USER_SUCCESS);
 		} catch (Exception e) {
 			String msg = "Update user failed:" + e.getMessage();
 			logger.error(msg, e);
@@ -77,7 +78,7 @@ public class UserManagerController {
 	public Object deleteUser(@PathVariable("id") Integer userId) {
 		try {
 			service.delete(userId);
-			return new Response("Delete user success");
+			return new Response(ResponseMsg.DELETE_USER_SUCCESS);
 		} catch (Exception e) {
 			String msg = "Delete user failed:" + e.getMessage();
 			logger.error(msg, e);
