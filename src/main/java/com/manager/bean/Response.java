@@ -14,18 +14,20 @@ public class Response {
 	private String token = null;
 	private Timestamp timeStamp;
 	
-	protected Response(){}
+	protected Response(){
+		this.timeStamp = new Timestamp(new Date().getTime());
+	}
 	
 	public Response(Object data) {
+		this();
 		this.data = data;
-		this.timeStamp = new Timestamp(new Date().getTime());
 	}
 	
 	public Response(String status) {
+		this();
 		this.status = status;
-		this.timeStamp = new Timestamp(new Date().getTime());
 	}
-	
+
 	@JsonInclude(Include.NON_NULL)
 	public Object getData() {
 		return data;

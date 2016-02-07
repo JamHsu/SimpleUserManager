@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.manager.Application;
 import com.manager.bean.Response;
 import com.manager.bean.User;
@@ -66,9 +67,9 @@ public class UserManagerControllerTest {
 		User newUser = new User();
 		newUser.setName(testUserName);
 		newUser.setPassword(testUserPassword);
-		Object response = userController.createUser(newUser);
-		assertTrue(response instanceof User);
-		Integer userId = ((User) response).getId();
+		Response response = userController.createUser(newUser).getBody();
+		assertTrue(response.getData() instanceof User);
+		Integer userId = ((User) response.getData()).getId();
 		
 		// get user
 		User getUser = testGetUser(testUserName, testUserPassword, userId);
@@ -80,13 +81,13 @@ public class UserManagerControllerTest {
 		updateUser.setId(getUser.getId());
 		updateUser.setName(updateUserName);
 		updateUser.setPassword(updateUserPassword);
-		response = userController.updateUser(updateUser);
+		response = userController.updateUser(updateUser).getBody();
 		assertTrue(response instanceof Response);
 		assertEquals(ResponseMsg.UPDATE_USER_SUCCESS, ((Response) response).getStatus());
 		testGetUser(updateUserName, updateUserPassword, updateUser.getId());
 		
 		// delete
-		response = userController.deleteUser(updateUser.getId());
+		response = userController.deleteUser(updateUser.getId()).getBody();
 		assertTrue(response instanceof Response);
 		assertEquals(ResponseMsg.DELETE_USER_SUCCESS, ((Response) response).getStatus());
 	}
@@ -94,9 +95,9 @@ public class UserManagerControllerTest {
 	private User testGetUser(final String expectUserName,
 			final String expectUserPassword, Integer userId) {
 		
-		Object response = userController.getUser(userId);
-		assertTrue(response instanceof User);
-		User getUser = (User) response;
+		Response response = userController.getUser(userId).getBody();
+		assertTrue(response.getData() instanceof User);
+		User getUser = (User) response.getData();
 		assertEquals(expectUserName, getUser.getName());
 		assertEquals(expectUserPassword, getUser.getPassword());
 		return getUser;
@@ -121,7 +122,10 @@ public class UserManagerControllerTest {
 		
 		// read
 		String responseStr = result.getResponse().getContentAsString();
-		User responseUser = new ObjectMapper().readValue(responseStr, User.class);
+		Response response = new ObjectMapper().readValue(responseStr, Response.class);
+		String tempJson = new Gson().toJson(response.getData());
+		User responseUser = new ObjectMapper().readValue(
+				tempJson, User.class);
 		tesMockGetUser(responseUser, "\"name\":\"mockUserTest\"");
 		
 		// update

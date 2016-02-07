@@ -12,14 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.manager.bean.Response;
 import com.manager.constant.ParameterConstant;
 import com.manager.util.TokenUtil;
 
 @Component
 public class AuthenticationTokenFilter implements Filter {
 
+	private Logger logger = Logger.getLogger(getClass());
 	private static final String ignoreUrl = "/auth/login";
 
 	@Override
@@ -45,10 +50,15 @@ public class AuthenticationTokenFilter implements Filter {
             		chain.doFilter(request, response);
             	}
             }
-		} 
-		
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		httpResponse.sendRedirect("/login.html");
+		} else {
+			HttpServletResponse httpResponse = (HttpServletResponse) response;
+			httpResponse.setStatus(HttpStatus.UNAUTHORIZED_401);
+			httpResponse.setContentType("application/json");
+			logger.warn("Unauthorized ip from:" + httpRequest.getRemoteAddr());
+			String responseJson = 
+					new ObjectMapper().writeValueAsString(new Response("Access Denied."));
+			httpResponse.getWriter().write(responseJson);
+		}
 		
 	}
 
