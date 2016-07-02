@@ -67,9 +67,9 @@ public class UserManagerControllerTest {
 		User newUser = new User();
 		newUser.setName(testUserName);
 		newUser.setPassword(testUserPassword);
-		Response response = userController.createUser(newUser).getBody();
-		assertTrue(response.getData() instanceof User);
-		Integer userId = ((User) response.getData()).getId();
+		Object responseData = userController.createUser(newUser).getBody();
+		assertTrue(responseData instanceof User);
+		Integer userId = ((User) responseData).getId();
 		
 		// get user
 		User getUser = testGetUser(testUserName, testUserPassword, userId);
@@ -81,23 +81,23 @@ public class UserManagerControllerTest {
 		updateUser.setId(getUser.getId());
 		updateUser.setName(updateUserName);
 		updateUser.setPassword(updateUserPassword);
-		response = userController.updateUser(updateUser).getBody();
-		assertTrue(response instanceof Response);
-		assertEquals(ResponseMsg.UPDATE_USER_SUCCESS, ((Response) response).getStatus());
+		responseData = (Response) userController.updateUser(updateUser).getBody();
+		assertTrue(responseData instanceof Response);
+		assertEquals(ResponseMsg.UPDATE_USER_SUCCESS, ((Response) responseData).getStatus());
 		testGetUser(updateUserName, updateUserPassword, updateUser.getId());
 		
 		// delete
-		response = userController.deleteUser(updateUser.getId()).getBody();
-		assertTrue(response instanceof Response);
-		assertEquals(ResponseMsg.DELETE_USER_SUCCESS, ((Response) response).getStatus());
+		responseData = (Response) userController.deleteUser(updateUser.getId()).getBody();
+		assertTrue(responseData instanceof Response);
+		assertEquals(ResponseMsg.DELETE_USER_SUCCESS, ((Response) responseData).getStatus());
 	}
 
 	private User testGetUser(final String expectUserName,
 			final String expectUserPassword, Integer userId) {
 		
-		Response response = userController.getUser(userId).getBody();
-		assertTrue(response.getData() instanceof User);
-		User getUser = (User) response.getData();
+		Object responseData = userController.getUser(userId).getBody();
+		assertTrue(responseData instanceof User);
+		User getUser = (User) responseData;
 		assertEquals(expectUserName, getUser.getName());
 		assertEquals(expectUserPassword, getUser.getPassword());
 		return getUser;
@@ -122,8 +122,8 @@ public class UserManagerControllerTest {
 		
 		// read
 		String responseStr = result.getResponse().getContentAsString();
-		Response response = new ObjectMapper().readValue(responseStr, Response.class);
-		String tempJson = new Gson().toJson(response.getData());
+		User userData = new ObjectMapper().readValue(responseStr, User.class);
+		String tempJson = new Gson().toJson(userData);
 		User responseUser = new ObjectMapper().readValue(
 				tempJson, User.class);
 		tesMockGetUser(responseUser, "\"name\":\"mockUserTest\"");

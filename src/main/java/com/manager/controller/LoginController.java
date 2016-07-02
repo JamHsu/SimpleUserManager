@@ -29,7 +29,7 @@ public class LoginController {
 	private LoginService service;
 	
 	@RequestMapping(value ="/login", method = RequestMethod.POST)
-	public ResponseEntity<Response> login(HttpServletRequest request,
+	public ResponseEntity<Object> login(HttpServletRequest request,
 			@RequestBody User user) {
 		try {
 			if(user.getName() != null
@@ -43,21 +43,21 @@ public class LoginController {
 					session.setAttribute(ParameterConstant.TOKEN, token);
 					Response response = new Response("Login success.")
 									.appendToken(token);
-					return ControllerUtils.createRespone(response, HttpStatus.OK);
+					return ControllerUtils.createResponse(response, HttpStatus.OK);
 				} else {
-					return ControllerUtils.createRespone(
+					return ControllerUtils.createResponse(
 							new Response("Login failed, user name or password incorrect.")
 							, HttpStatus.UNAUTHORIZED);
 				}
 				
 			} else {
-				return ControllerUtils.createRespone(
+				return ControllerUtils.createResponse(
 						new Response("Can not get user name or password")
 						, HttpStatus.UNPROCESSABLE_ENTITY); 
 			}
 		} catch (Exception e) {
 			logger.error("Login failed", e);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response("Login failed:" + e.getMessage())
 					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -65,12 +65,12 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value ="/logout", method = RequestMethod.POST)
-	public ResponseEntity<Response> logout(HttpServletRequest request) {
+	public ResponseEntity<Object> logout(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if(session != null) {
 			session.setAttribute(ParameterConstant.TOKEN, null);
 		}
-		return ControllerUtils.createRespone(
+		return ControllerUtils.createResponse(
 				new Response("Logout success.")
 				, HttpStatus.OK);
 	}

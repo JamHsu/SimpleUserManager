@@ -30,90 +30,90 @@ public class UserManagerController {
 	private UserCrudService service;
 	
 	@RequestMapping(value ="", method = RequestMethod.POST)
-	public ResponseEntity<Response> createUser(@RequestBody User user) {
+	public ResponseEntity<Object> createUser(@RequestBody User user) {
 		try {
 			Integer id = service.create(user);
-			return ControllerUtils.createRespone(
-					new Response(service.getData(id))
+			return ControllerUtils.createResponse(
+					service.getData(id)
 					, HttpStatus.OK);
 		} catch (UserExistException e) {
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(ResponseMsg.USER_IS_EXIST)
 					, HttpStatus.OK); 
 		} catch (Exception e) {
 			String msg = "Create user occur exception:" + e.getMessage();
 			logger.error(msg, e);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(msg)
 					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value ="", method = RequestMethod.GET)
-	public ResponseEntity<Response> listUsers() {
+	public ResponseEntity<Object> listUsers() {
 		try {
 			List<User> userList = service.listData();
 			logger.debug("get user count:" + userList.size());
-			return ControllerUtils.createRespone(
-					new Response(userList)
+			return ControllerUtils.createResponse(
+					userList
 					, HttpStatus.OK);
 		} catch (Exception e) {
 			String msg = "list users failed:" + e.getMessage();
 			logger.error(msg, e);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(msg)
 					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value ="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Response> getUser(@PathVariable("id") Integer userId) {
+	public ResponseEntity<Object> getUser(@PathVariable("id") Integer userId) {
 		try {
 			User user = service.getData(userId);
 			logger.debug("get user:" + user);
-			return ControllerUtils.createRespone(
-					new Response(user)
+			return ControllerUtils.createResponse(
+					user
 					, HttpStatus.OK);
 		} catch (EmptyResultDataAccessException e) {
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(ResponseMsg.USER_NOT_FOUND)
 					, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			String msg = "get user " + userId + " failed:" + e.getMessage();
 			logger.error(msg, e);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(msg)
 					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value="", method = RequestMethod.PUT)
-	public ResponseEntity<Response> updateUser(@RequestBody User user) {
+	public ResponseEntity<Object> updateUser(@RequestBody User user) {
 		try {
 			service.update(user);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(ResponseMsg.UPDATE_USER_SUCCESS)
 					, HttpStatus.OK);
 		} catch (Exception e) {
 			String msg = "Update user failed:" + e.getMessage();
 			logger.error(msg, e);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(msg)
 					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value ="/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Response> deleteUser(@PathVariable("id") Integer userId) {
+	public ResponseEntity<Object> deleteUser(@PathVariable("id") Integer userId) {
 		try {
 			service.delete(userId);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(ResponseMsg.DELETE_USER_SUCCESS)
 					, HttpStatus.OK);
 		} catch (Exception e) {
 			String msg = "Delete user failed:" + e.getMessage();
 			logger.error(msg, e);
-			return ControllerUtils.createRespone(
+			return ControllerUtils.createResponse(
 					new Response(msg)
 					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

@@ -1,5 +1,11 @@
 package com.manager.util;
 
+import java.security.Key;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -21,8 +27,10 @@ public class TokenUtil {
 	}
 	
 	public static String createToken() {
-		String randomString = RandomStringUtils.randomAlphanumeric(32);
-		String token = randomString + KEY;
+		Key key = MacProvider.generateKey();
+		String token = Jwts.builder().setSubject(KEY).signWith(SignatureAlgorithm.HS512, key).compact();
+//		String randomString = RandomStringUtils.randomAlphanumeric(32);
+//		String token = randomString + KEY;
 		return token;
 	}
 	
